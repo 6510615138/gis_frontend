@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import Link from 'next/link'
 
 export default function Home() {
   return (<main>
@@ -20,6 +21,13 @@ export default function Home() {
           <h2>TRADE COMPETITION COMMISSION OF THAILAND</h2>
         </a>
         </div>
+        <div className="m-auto">
+          <Link href="/map">
+                  <div className="bg-blue-tcct text-xs size-fit p-2.5 px-3 text-white rounded-lg">
+          Explore
+        </div>
+        </Link>
+        </div>
       </nav>
     </header>
 
@@ -27,13 +35,13 @@ export default function Home() {
       <div className="w-[500px] flex flex-col gap-5">
         <h1 className="text-4xl">TCCT GIS</h1>
         <p>Interactive map-based platform designed for organizing and tracking location-based competitions of businesses in Thailand.</p>
-        <div className="bg-blue-tcct size-fit p-3 text-white rounded-md">
+                  <Link href="/map">
+        <div className="bg-blue-tcct size-fit p-3 px-5 text-white rounded-xl">
           Explore
         </div>
+        </Link>
       </div>
     </div>
-
-
     <footer className=" bg-red-tcct  text-center">
       Trade competiton commission of Thailand. All right reserved.
     </footer>

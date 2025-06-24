@@ -3,7 +3,7 @@ import { useState } from "react";
 
 
 export default function NavigationBar() {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(false)
 
     function handleClick() {
         setOpen(!open);
