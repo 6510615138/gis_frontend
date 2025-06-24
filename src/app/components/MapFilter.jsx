@@ -16,7 +16,7 @@ export default function MapFilter() {
                 {`${open ? '  \\/  ' : '  /\\  '}`}
             </div> */}
       <div>
-          <SearchBox />
+          {/* <SearchBox /> */}
 
 
       </div>
