@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 
 const SearchBox = ({ baseUrl = 'http://localhost:8000' }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -6,6 +6,7 @@ const SearchBox = ({ baseUrl = 'http://localhost:8000' }) => {
     const [searchType, setSearchType] = useState('province'); // province, district, subdistrict
     const [results, setResults] = useState([]);
     const [selected, setSelected] = useState(null);
+    const [areaList,setAreaList] = useState([]);
 
     // Debounce search input
     useEffect(() => {
@@ -31,7 +32,8 @@ const SearchBox = ({ baseUrl = 'http://localhost:8000' }) => {
     }, [debouncedSearchTerm, searchType]);
 
     return (
-        <div className='w-[600px] h-min absolute top-0.5 left-50  z-1800 bg-white'>
+        <div>
+        <div className='w-[600px] h-min absolute top-0.5 left-50  z-1800'>
             <h2>Search Location</h2>
             <div style={{ marginBottom: 10 }}>
                 <label htmlFor="type-select">Search by: </label>
@@ -51,11 +53,11 @@ const SearchBox = ({ baseUrl = 'http://localhost:8000' }) => {
                 placeholder={`Search for a ${searchType}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ width: '100%', padding: 8, boxSizing: 'border-box' }}
+                className='w-full p-[8px] rounded-3xl bg-white border-1 border-gray-400'
             />
 
             {results.length > 0 && (
-                <ul style={{ border: '1px solid #ccc', marginTop: 5, padding: 0 }}>
+                <ul style={{ border: '1px solid #ccc', marginTop: 5, padding: 0 }} className='max-h-[250px] overflow-y-auto-scroll overflow-x-hidden rounded-2xl bg-white'>
                     {results.map((item, index) => (
                         <li
                             key={index}
@@ -84,7 +86,7 @@ const SearchBox = ({ baseUrl = 'http://localhost:8000' }) => {
                                         <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
                                     </svg>
                                     <p className='align-middle'>
-                                        Add to focus area
+                                        Add
                                     </p>
 
                                 </div>
@@ -95,11 +97,12 @@ const SearchBox = ({ baseUrl = 'http://localhost:8000' }) => {
             )}
 
             {selected && (
-                <div style={{ marginTop: 20 }}>
+                <div className='mt-1 bg-blue-tcct text-white p-3 rounded-xl'>
                     <strong>Selected {searchType}:</strong>
                     <p>{selected.name} (Code: {selected.code})</p>
                 </div>
             )}
+        </div>
         </div>
     );
 };
