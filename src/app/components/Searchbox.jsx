@@ -1,130 +1,151 @@
-import React, { useState, useEffect, use ,createContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const MyContext = createContext();
-
-const SearchBox = ({  lst, setLst ,baseUrl = 'http://localhost:8000' }) => {
-    console.log('lst:', lst);         // should be []
-    console.log('setLst:', setLst);   // should be a function
-    console.log('baseUrl:', baseUrl); // should be either given or default
+const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localhost:8000' }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-    const [searchType, setSearchType] = useState('province'); // province, district, subdistrict
+    const [searchType, setSearchType] = useState('province');
     const [results, setResults] = useState([]);
     const [selected, setSelected] = useState(null);
-
+    const [loading, setLoading] = useState(false);
+    const [noResults, setNoResults] = useState(false);
 
     // Debounce search input
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 100);
+        const handler = setTimeout(() => setDebouncedSearchTerm(searchTerm), 200);
         return () => clearTimeout(handler);
     }, [searchTerm]);
 
-    // Fetch results from backend
+    // Fetch search results
     useEffect(() => {
         setSelected(null);
-        if (debouncedSearchTerm) {
-            const url = `${baseUrl}/${searchType}?search=${debouncedSearchTerm}`;
-            fetch(url)
-                .then((res) => res.json())
-                .then((data) => setResults(data))
-                .catch((err) => console.error('Error fetching:', err));
-        } else {
+        if (!debouncedSearchTerm) {
             setResults([]);
-            setSelected(null);
+            setNoResults(false);
+            return;
         }
+
+        const url = `${baseUrl}/${searchType}?search=${debouncedSearchTerm}`;
+        setLoading(true);
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                setResults(data);
+                setNoResults(data.length === 0);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error('Error fetching:', err);
+                setResults([]);
+                setNoResults(true);
+                setLoading(false);
+            });
     }, [debouncedSearchTerm, searchType]);
 
-    const handleAddItem = (item) => {
-        console.log("handleAddItem is called ..")
-        console.log(typeof(lst))
-        if (lst&&!lst.includes(item)) {
-            setLst([...lst, item]);
-            console.log(item)
+    const handleAddItem = (code) => {
+        if (lst && !lst.includes(code)) {
+            setLst([...lst, code]);
         }
     };
 
+    const isAlreadyAdded = selected && lst?.includes(selected.code);
+
     return (
-        <div>
-            <div className='w-[425px] h-min absolute top-0.5 left-5  z-1800'>
-                <h2>{lst&&lst.join(', ')}</h2>
-                <h2>Search Location</h2>
-                <div style={{ marginBottom: 10 }}>
-                    <label htmlFor="type-select">Search by: </label>
-                    <select
-                        id="type-select"
-                        value={searchType}
-                        onChange={(e) => setSearchType(e.target.value)}
+        <div className="absolute top-2 left-5 z-1800 w-[425px]">
+            <div className="mb-2 text-sm text-gray-800">
+                Selected: {lst?.join(', ') || 'None'}
+            </div>
+
+            <h2 className="text-lg font-semibold mb-2">Search Location</h2>
+
+            {/* Search Type Dropdown */}
+            <div className="mb-3">
+                <label htmlFor="type-select" className="mr-2 text-sm">Search by:</label>
+                <select
+                    id="type-select"
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                    className="border rounded px-2 py-1"
+                >
+                    <option value="province">Province</option>
+                    <option value="district">District</option>
+                    <option value="subdistrict">Subdistrict</option>
+                </select>
+            </div>
+
+            {/* Search Input */}
+            <div className="relative w-full mb-2">
+                <input
+                    type="text"
+                    placeholder={`Search for a ${searchType}...`}
+                    value={selected ? selected.name : searchTerm}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        if (selected) setSelected(null);
+                    }}
+                    className="w-full p-[10px] px-[20px] rounded-3xl bg-white border border-gray-400 text-black"
+                />
+                {searchTerm && (
+                    <button
+                        onClick={() => setSearchTerm('')}
+                        className="absolute right-4 top-[10px] text-gray-400 hover:text-black"
+                        aria-label="Clear search"
                     >
-                        <option value="province">Province</option>
-                        <option value="district">District</option>
-                        <option value="subdistrict">Subdistrict</option>
-                    </select>
-                </div>
-
-                <div className="relative w-full">
-                    <input
-                        type="text"
-                        placeholder={selected ? '' : `Search for a ${searchType}...`}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full p-[10px] px-[20px] rounded-3xl bg-white border border-gray-400 text-black `}
-                    />
-                </div>
-
-                {results.length > 0 && !selected && (
-                    <ul style={{ border: '1px solid #ccc', marginTop: 5, padding: 0 }} className='max-h-[250px] overflow-y-auto-scroll overflow-x-hidden rounded-2xl bg-white'>
-                        {results.map((item, index) => (
-                            <li
-                                key={index}
-                                onClick={() => setSelected(item)}
-                                style={{
-                                    listStyle: 'none',
-                                    padding: 8,
-                                    cursor: 'pointer',
-                                    borderBottom: '1px solid #eee'
-                                }}
-
-                                className='flex justify-between hover:bg-blue-tcct text-black hover:text-white'
-                            >
-                                <div className='justify-center my-auto mx-8'>
-                                    {item.name}
-                                </div>
-
-                                <div className='flex flex-row gap-3'>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-
-                {selected && (
-                    <div className='mt-1 bg-white text-black p-3 rounded-2xl flex flex-row justify-between'>
-                        <div className='my-auto mx-8'>
-                            <p>{selected.name} (Code: {selected.code})</p>
-                        </div>
-                        <div className='flex flex-row gap-3'>
-                                    <div className='flex flex-row text-xs align-middle hover:bg-blue-tcct text-black hover:text-white p-1.5 rounded-2xl '>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
-                                            <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
-                                        </svg>
-                                        <p className='align-middle pt-0.25'>Locate</p>
-
-                                    </div>
-                                    <div className='flex flex-row text-xs align-middle hover:bg-blue-tcct text-black hover:text-white p-1.5 rounded-2xl cursor-pointer'
-                                    onClick={() => handleAddItem(selected.code)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
-                                            <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-                                        </svg>
-                                        <p className='align-middle pt-0.25'>
-                                            Add
-                                        </p>
-                                    </div>
-                                </div>
-                    </div>
+                        ✕
+                    </button>
                 )}
             </div>
+
+            {/* Search Results */}
+            {loading && <p className="text-sm text-gray-500">Searching...</p>}
+            {noResults && <p className="text-sm text-red-500">No results found.</p>}
+            {!loading && results.length > 0 && !selected && (
+                <ul
+                    className="max-h-[250px] mt-1 overflow-y-auto rounded-2xl bg-white border border-gray-300 transition-all"
+                    onMouseLeave={() => setResults([])}
+                >
+                    {results.map((item, index) => (
+                        <li
+                            key={index}
+                            onClick={() => setSelected(item)}
+                            className="flex justify-between items-center px-5 py-2 cursor-pointer hover:bg-blue-tcct hover:text-white text-black border-b border-gray-100"
+                        >
+                            <span>{item.name}</span>
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {/* Selected Item Actions */}
+            {selected && (
+                <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                        <p className="font-medium">{selected.name} (Code: {selected.code})</p>
+                        <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-black text-xl">
+                            ✕
+                        </button>
+                    </div>
+                    <div className="flex gap-3">
+                        {/* Locate (placeholder only) */}
+                        <div className="flex items-center gap-1 text-xs px-2 py-1 border rounded-2xl text-black hover:text-white hover:bg-blue-tcct cursor-pointer">
+                            <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path fillRule="evenodd" d="M12 3a9 9 0 0 0-9 9c0 6.27 9 13 9 13s9-6.73 9-13a9 9 0 0 0-9-9Zm0 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" clipRule="evenodd" />
+                            </svg>
+                            <span>Locate</span>
+                        </div>
+
+                        {/* Add */}
+                        <div
+                            onClick={() => !isAlreadyAdded && handleAddItem(selected.code)}
+                            className={`flex items-center gap-1 text-xs px-2 py-1 rounded-2xl ${isAlreadyAdded ? 'bg-green-300 cursor-not-allowed' : 'text-black hover:bg-blue-tcct hover:text-white cursor-pointer border'}`}
+                        >
+                            <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+                            </svg>
+                            <span>{isAlreadyAdded ? 'Added' : 'Add'}</span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
