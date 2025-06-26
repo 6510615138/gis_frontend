@@ -1,6 +1,5 @@
 'use client'
 import dynamic from 'next/dynamic';
-import NavigationBar from '../components/Navigation.jsx';
 import SearchBox from "../components/Searchbox";
 import React, { useState, useEffect, use ,createContext } from 'react';
 
@@ -38,7 +37,6 @@ export default function MapPage() {
     fetchCoor();
   }, [lst, backend_url]);
   return (<div className='w-[100vw] h-[100vh] flex'>
-     <NavigationBar />
      <SearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />
      <MapComponent geoJsonString={coor}/>
      </div>)
