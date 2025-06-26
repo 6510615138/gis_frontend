@@ -47,14 +47,14 @@ const MyMap = ({ geoJsonString }) => {
     }, [geoJsonString]);
 
     return (
-        <MapContainer center={[13.75, 100.5]} zoom={6} style={{ height: "100%", width: "100%" }} zoomControl={false}>
+        <MapContainer center={[13.75, 100.5]} zoom={6} style={{ height: "100%", width: "100vw" }} zoomControl={false}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; OpenStreetMap contributors'
             />
             <FitBounds polygons={polygons} />
             {polygons.map((polygon, index) => (
-                <Polygon key={index} positions={polygon} pathOptions={{ color: 'blue' }} />
+                <Polygon key={index} positions={polygon} pathOptions={{ color: 'blue'}} />
             ))}
         </MapContainer>
     );

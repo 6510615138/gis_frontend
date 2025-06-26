@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import SearchBox from "../components/Searchbox";
 import React, { useState, useEffect, use ,createContext } from 'react';
+import Menu from '../components/Menu';
 
 
 const MapComponent = dynamic(() => import('../components/MapComponent.jsx'), {
@@ -37,7 +38,8 @@ export default function MapPage() {
     fetchCoor();
   }, [lst, backend_url]);
   return (<div className='w-[100vw] h-[100vh] flex'>
-     <SearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />
+    <Menu/>
+     {/* <SearchBox lst={lst} setLst={setLst} baseUrl={backend_url} /> */}
      <MapComponent geoJsonString={coor}/>
      </div>)
 }
