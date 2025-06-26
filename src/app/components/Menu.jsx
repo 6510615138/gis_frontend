@@ -125,7 +125,9 @@ export default function Menu({children}) {
         <div>
             
         </div>
+        <div className="p-5">            
             {...children}
+        </div>
         </div>
         <div className="resize trigger
          w-2 h-full 

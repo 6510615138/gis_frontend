@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localhost:8000' }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-    const [searchType, setSearchType] = useState('province');
-    const [results, setResults] = useState([]);
-    const [selected, setSelected] = useState(null);
+    const [searchType, setSearchType] = useState('province');//['province','district','subdistrict']
+    const [results, setResults] = useState([]);//fetch data result 
+    const [selected, setSelected] = useState(null);//user select province
     const [loading, setLoading] = useState(false);
-    const [noResults, setNoResults] = useState(false);
 
     // Debounce search input
     useEffect(() => {
@@ -21,7 +20,6 @@ const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localh
         setSelected(null);
         if (!debouncedSearchTerm) {
             setResults([]);
-            setNoResults(false);
             return;
         }
 
@@ -31,13 +29,11 @@ const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localh
             .then(res => res.json())
             .then(data => {
                 setResults(data);
-                setNoResults(data.length === 0);
                 setLoading(false);
             })
             .catch(err => {
                 console.error('Error fetching:', err);
                 setResults([]);
-                setNoResults(true);
                 setLoading(false);
             });
     }, [debouncedSearchTerm, searchType]);
@@ -51,7 +47,7 @@ const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localh
     const isAlreadyAdded = selected && lst?.includes(selected.code);
 
     return (
-        <div className=" w-[425px]">
+        <div className=" max-w-[425px]">
             <div className="mb-2 text-sm text-gray-800">
                 Selected: {lst?.join(', ') || 'None'}
             </div>
@@ -98,7 +94,7 @@ const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localh
 
             {/* Search Results */}
             {loading && <p className="text-sm text-gray-500">Searching...</p>}
-            {noResults && <p className="text-sm text-red-500">No results found.</p>}
+            {debouncedSearchTerm &&results.length===0 && <p className="text-sm text-red-500">No results found.</p>}
             {!loading && results.length > 0 && !selected && (
                 <ul
                     className="max-h-[250px] mt-1 overflow-y-auto rounded-2xl bg-white border border-gray-300 transition-all"
