@@ -125,7 +125,7 @@ export default function Menu(params) {
         <div>
             
         </div>
-
+            <SearchBox/>
         </div>
         <div className="resize trigger
          w-2 h-full 

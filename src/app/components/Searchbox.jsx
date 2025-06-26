@@ -50,7 +50,7 @@ const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localh
     const isAlreadyAdded = selected && lst?.includes(selected.code);
 
     return (
-        <div className="absolute top-2 left-5 z-1800 w-[425px]">
+        <div className=" w-[425px]">
             <div className="mb-2 text-sm text-gray-800">
                 Selected: {lst?.join(', ') || 'None'}
             </div>
