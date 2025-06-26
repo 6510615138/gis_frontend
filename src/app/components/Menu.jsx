@@ -5,7 +5,7 @@ import SearchBox from "./Searchbox";
 
 const [minWidth, maxWidth, defaultWidth] = [300, 900, 350];
 
-export default function Menu(params) {
+export default function Menu({children}) {
 
     const [isMinimized, setMinimized] = useState(false) // this state is for toggle minimized menu 
     const handleMinimized = () => {//state toggle function
@@ -125,7 +125,7 @@ export default function Menu(params) {
         <div>
             
         </div>
-            <SearchBox/>
+            {...children}
         </div>
         <div className="resize trigger
          w-2 h-full 

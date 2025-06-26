@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localhost:8000' }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');

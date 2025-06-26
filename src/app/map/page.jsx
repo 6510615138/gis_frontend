@@ -13,7 +13,6 @@ export default function MapPage() {
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [lst, setLst] = useState([]);
   const [coor, setCoor] = useState(null);
-  const [searchBarVis, setSearchVis] = useState(null);
   useEffect(() => {
     const fetchCoor = async () => {
       if (lst && lst.length > 0) {
@@ -37,9 +36,9 @@ export default function MapPage() {
 
     fetchCoor();
   }, [lst, backend_url]);
+
   return (<div className='w-[100vw] h-[100vh] flex'>
-    <Menu/>
-     {/* <SearchBox lst={lst} setLst={setLst} baseUrl={backend_url} /> */}
+    <Menu children={[<SearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />]}/>
      <MapComponent geoJsonString={coor}/>
      </div>)
 }
