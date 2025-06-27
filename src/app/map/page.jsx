@@ -1,6 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic';
-import SearchBox from "../components/Searchbox";
+import ProvinceSearchBox from "../components/ProvinceSearchbox";
 import React, { useState, useEffect, use ,createContext } from 'react';
 import Menu from '../components/Menu';
 import Link from "next/link";
@@ -38,7 +38,7 @@ export default function MapPage() {
   }, [lst, backend_url]);
 
   return (<div className='w-[100vw] h-[100vh] flex'>
-    <Menu children={[<SearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />]}/>
+    <Menu children={[<ProvinceSearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />]}/>
      <MapComponent geoJsonString={coor}/>
      </div>)
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localhost:8000' }) => {
+const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localhost:8000' }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [searchType, setSearchType] = useState('province');//['province','district','subdistrict']
@@ -147,4 +147,4 @@ const SearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http://localh
     );
 };
 
-export default SearchBox;
+export default ProvinceSearchBox;

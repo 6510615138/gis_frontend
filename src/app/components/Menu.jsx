@@ -1,11 +1,22 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import SearchBox from "./Searchbox";
+import SearchBox from "./ProvinceSearchbox";
 import Link from 'next/link'
 
 const [minWidth, maxWidth, defaultWidth] = [300, 900, 350];
 
-export default function Menu({children}) {
+export default function Menu({ children }) {
+    const [filters, setFilters] = useState({
+        specific: false,
+        area: false,
+        type: false,
+    });
+    const setFilter = (name) => {
+        setFilters(prev => ({
+            ...prev,
+            [name]: !prev[name],
+        }));
+    };
 
     const [isMinimized, setMinimized] = useState(false) // this state is for toggle minimized menu 
     const handleMinimized = () => {//state toggle function
@@ -48,12 +59,12 @@ export default function Menu({children}) {
                     height={70}
                     alt="minimize"
                     className="w-[48px] h-[23px] my-auto mx-5" />
- 
+
                 <div className="flex flex-row justify-end">
                     <p className="text-xs h-fit">ขยาย</p>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    onClick={handleMinimized}
-                    className="mr-[5px] my-[5px] mx-[3px]
+                        onClick={handleMinimized}
+                        className="mr-[5px] my-[5px] mx-[3px]
                     cursor-pointer
                  hover:fill-blue-tcct stroke-black hover:stroke-white">
                         <path d="M10 6.66667V13.3333M6.66667 10H13.3333M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" strokeLinecap="round" strokeLinejoin="round" />
@@ -85,14 +96,14 @@ export default function Menu({children}) {
         justify-between
         border-b-1 border-black/10
         ">
-            <Link href="/" className="cursor-pointer w-fit h-fit my-auto mx-5">
-                <Image
-                    src="/logo.png"
-                    width={130}
-                    height={70}
-                    alt="minimize"
-                    className="w-[68px] h-[32px] " />
-            </Link>
+                <Link href="/" className="cursor-pointer w-fit h-fit my-auto mx-5">
+                    <Image
+                        src="/logo.png"
+                        width={130}
+                        height={70}
+                        alt="minimize"
+                        className="w-[68px] h-[32px] " />
+                </Link>
                 <div className="flex flex-row justify-end">
                     <p className="text-xs h-fit">ย่อขนาด</p>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -119,19 +130,18 @@ export default function Menu({children}) {
         gap-x-4 gap-y-2
         p-1
         text-s">
-                    <FilterButton text="ทั้งหมด" />
-                    <FilterButton text="ข้อมูลเฉพาะ" />
-                    <FilterButton text="พื้นที่" />
-                    <FilterButton text="ประเภทธุรกิจ" />
+                <FilterButton text="ข้อมูลเฉพาะ" active={filters.specific} onClick={() => setFilter('specific')} />
+                <FilterButton text="พื้นที่" active={filters.area} onClick={() => setFilter('area')} />
+                <FilterButton text="ประเภทธุรกิจ" active={filters.type} onClick={() => setFilter('type')} />
                 </div>
 
             </div>
-        <div>
-            
-        </div>
-        <div className="p-5">            
-            {...children}
-        </div>
+            <div>
+
+            </div>
+            <div className="p-5">
+                {...children}
+            </div>
         </div>
         <div className="resize trigger
          w-2 h-full 
@@ -150,31 +160,17 @@ export default function Menu({children}) {
 
 
 
-const FilterButton = ({ text, onClick, setState, hole }) => {
-    const [selected, setSelected] = useState(false);
-
-    const handleClick = () => {
-        const newState = !selected;
-        setSelected(newState);
-        if (onClick) onClick();
-        if (hole) hole(newState);
-    };
-
-    useEffect(() => {
-        if (typeof setState === 'boolean') {
-            setSelected(setState);
-        }
-    }, [setState]);
+const FilterButton = ({ text, onClick, active }) => {
 
     return (
         <div
-            onClick={handleClick}
+            onClick={onClick}
             className={`button
             w-fit h-fit
             px-3
             border-black/10 border-1
             rounded-[5px]
-            ${selected ? "bg-blue-tcct text-white" : "bg-white hover:bg-black/10"}
+            ${active ? 'bg-blue-tcct text-white' : 'bg-white text-black border-gray-300'}
             cursor-pointer
             text-nowrap
             `}>
