@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import SearchBox from "./Searchbox";
-
+import Link from 'next/link'
 
 const [minWidth, maxWidth, defaultWidth] = [300, 900, 350];
 
@@ -41,12 +41,14 @@ export default function Menu({children}) {
     absolute left-1.5 top-3 z-1800
     rounded-[5px]
     flex flex-row">
+
                 <Image
                     src="/logo.png"
                     width={130}
                     height={70}
-                    alt="TCCT logo"
+                    alt="minimize"
                     className="w-[48px] h-[23px] my-auto mx-5" />
+ 
                 <div className="flex flex-row justify-end">
                     <p className="text-xs h-fit">ขยาย</p>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +56,7 @@ export default function Menu({children}) {
                     className="mr-[5px] my-[5px] mx-[3px]
                     cursor-pointer
                  hover:fill-blue-tcct stroke-black hover:stroke-white">
-                        <path d="M10 6.66667V13.3333M6.66667 10H13.3333M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke-linecap="round" strokeLinejoin="round" />
+                        <path d="M10 6.66667V13.3333M6.66667 10H13.3333M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
 
                 </div>
@@ -83,12 +85,14 @@ export default function Menu({children}) {
         justify-between
         border-b-1 border-black/10
         ">
+            <Link href="/" className="cursor-pointer w-fit h-fit my-auto mx-5">
                 <Image
                     src="/logo.png"
                     width={130}
                     height={70}
-                    alt="TCCT logo"
-                    className="w-[68px] h-[32px] my-auto mx-5" />
+                    alt="minimize"
+                    className="w-[68px] h-[32px] " />
+            </Link>
                 <div className="flex flex-row justify-end">
                     <p className="text-xs h-fit">ย่อขนาด</p>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"

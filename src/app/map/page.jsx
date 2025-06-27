@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import SearchBox from "../components/Searchbox";
 import React, { useState, useEffect, use ,createContext } from 'react';
 import Menu from '../components/Menu';
-
+import Link from "next/link";
 
 const MapComponent = dynamic(() => import('../components/MapComponent.jsx'), {
   ssr: false,
