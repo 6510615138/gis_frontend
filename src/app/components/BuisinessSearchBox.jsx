@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [searchType, setSearchType] = useState('province');//['province','district','subdistrict']
-    const [results, setResults] = useState([]);//fetch data result 
     const [selected, setSelected] = useState(null);//user select province
     const [loading, setLoading] = useState(false);
 
@@ -14,29 +12,6 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
         const handler = setTimeout(() => setDebouncedSearchTerm(searchTerm), 200);
         return () => clearTimeout(handler);
     }, [searchTerm]);
-
-    // Fetch search results
-    useEffect(() => {
-        setSelected(null);
-        if (!debouncedSearchTerm) {
-            setResults([]);
-            return;
-        }
-
-        const url = `${baseUrl}/${searchType}?search=${debouncedSearchTerm}`;
-        setLoading(true);
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                setResults(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error('Error fetching:', err);
-                setResults([]);
-                setLoading(false);
-            });
-    }, [debouncedSearchTerm, searchType]);
 
     const handleAddItem = (code) => {
         if (lst && !lst.includes(code)) {
@@ -52,22 +27,7 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
                 Selected: {lst?.join(', ') || 'None'}
             </div>
 
-            <h2 className="text-lg font-semibold mb-2">Search Location</h2>
-
-            {/* Search Type Dropdown */}
-            <div className="mb-3">
-                <label htmlFor="type-select" className="mr-2 text-sm">Search by:</label>
-                <select
-                    id="type-select"
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
-                    className="border rounded px-2 py-1"
-                >
-                    <option value="province">Province</option>
-                    <option value="district">District</option>
-                    <option value="subdistrict">Subdistrict</option>
-                </select>
-            </div>
+            <h2 className="text-lg font-semibold mb-2">Search Buisiness</h2>
 
             {/* Search Input */}
             <div className="relative w-full mb-2">

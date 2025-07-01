@@ -81,7 +81,8 @@ export default function Menu({ children }) {
     bg-white/70
     absolute left-0 top-0 z-1800
     flex flex-row
-    overflow-hidden
+    overflow-x-hidden
+     scrollbar-thumb-gray-900 scrollbar-track-gray-100
     `}>
         <div className="visable-menu-warpper
         w-full

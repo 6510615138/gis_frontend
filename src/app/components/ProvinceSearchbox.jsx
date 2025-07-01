@@ -48,9 +48,7 @@ const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http:
 
     return (
         <div className=" max-w-[425px]">
-            <div className="mb-2 text-sm text-gray-800">
-                Selected: {lst?.join(', ') || 'None'}
-            </div>
+ 
 
             <h2 className="text-lg font-semibold mb-2">Search Location</h2>
 
@@ -143,6 +141,13 @@ const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http:
                     </div>
                 </div>
             )}
+            {lst && 
+            (<div className="mb-2 text-sm text-gray-800">
+                Selected: {lst?.join(', ') || 'None'}
+            </div>
+            )
+            }
+
         </div>
     );
 };
