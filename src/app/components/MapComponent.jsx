@@ -31,6 +31,17 @@ const FitBounds = ({ polygons }) => {
 
     return null;
 };
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random()* 0.8 * 16)];
+  }
+  return color;
+}
+
+
 const MyMap = ({ geoJsonString, markers }) => {
     const [polygons, setPolygons] = useState([]);
 
@@ -43,6 +54,8 @@ const MyMap = ({ geoJsonString, markers }) => {
             } catch (err) {
                 console.error("Invalid GeoJSON:", err);
             }
+        }else{
+            setPolygons([]);
         }
     }, [geoJsonString]);
 const svgIcon = new L.DivIcon({
@@ -65,7 +78,7 @@ const svgIcon = new L.DivIcon({
             />
             <FitBounds polygons={polygons} />
             {polygons.map((polygon, index) => (
-                <Polygon key={index} positions={polygon} pathOptions={{ color: 'blue' }} />
+                <Polygon key={index} positions={polygon} pathOptions={{ color: getRandomColor() }} />
             ))}
             {markers && markers.map((marker) => {
                 if (marker.lat == "NULL" || marker.long == "NULL") {
