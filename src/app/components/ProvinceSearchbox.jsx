@@ -38,13 +38,16 @@ const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http:
             });
     }, [debouncedSearchTerm, searchType]);
 
-    const handleAddItem = (code) => {
-        if (lst && !lst.includes(code)) {
-            setLst([...lst, code]);
+    const lstAddItem = (object) => {
+        if (lst && !lst.includes(object)) {
+            setLst([...lst, object]);
         }
+        };
+    const lstRemoveItem = (codeToRemove) => {
+        const updatedList = lst.filter(item => item.code !== codeToRemove);
+        setLst(updatedList);
     };
-
-    const isAlreadyAdded = selected && lst?.includes(selected.code);
+    const isAlreadyAdded = selected && lst?.includes(selected);
 
     return (
         <div className=" max-w-[425px]">
@@ -92,7 +95,7 @@ const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http:
 
             {/* Search Results */}
             {loading && <p className="text-sm text-gray-500">Searching...</p>}
-            {debouncedSearchTerm &&results.length===0 && <p className="text-sm text-red-500">No results found.</p>}
+            {!loading &&debouncedSearchTerm &&results.length===0 && <p className="text-sm text-red-500">No results found.</p>}
             {!loading && results.length > 0 && !selected && (
                 <ul
                     className="max-h-[250px] mt-1 overflow-y-auto rounded-2xl bg-white border border-gray-300 transition-all"
@@ -130,7 +133,7 @@ const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http:
 
                         {/* Add */}
                         <div
-                            onClick={() => !isAlreadyAdded && handleAddItem(selected.code)}
+                            onClick={() => !isAlreadyAdded && lstAddItem(selected)}
                             className={`flex items-center gap-1 text-xs px-2 py-1 rounded-2xl ${isAlreadyAdded ? 'bg-green-300 cursor-not-allowed' : 'text-black hover:bg-blue-tcct hover:text-white cursor-pointer border'}`}
                         >
                             <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -143,7 +146,26 @@ const ProvinceSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl = 'http:
             )}
             {lst && 
             (<div className="mb-2 text-sm text-gray-800">
-                Selected: {lst?.join(', ') || 'None'}
+                {lst?.map((item, index) => (
+                    <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                        <p className="font-medium">{item.name} (Code: {item.code})</p>
+                        <button onClick={()=>lstRemoveItem(item.code)} className="text-gray-400 hover:text-black text-xl">
+                            ✕
+                        </button>
+                    </div>
+                    <div className="flex gap-3">
+                        {/* Locate (placeholder only) */}
+                        <div className="flex items-center gap-1 text-xs px-2 py-1 border rounded-2xl text-black hover:text-white hover:bg-blue-tcct cursor-pointer">
+                            <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path fillRule="evenodd" d="M12 3a9 9 0 0 0-9 9c0 6.27 9 13 9 13s9-6.73 9-13a9 9 0 0 0-9-9Zm0 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" clipRule="evenodd" />
+                            </svg>
+                            <span>Locate</span>
+                        </div>
+
+                    </div>
+                </div>
+                ))}
             </div>
             )
             }

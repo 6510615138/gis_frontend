@@ -5,7 +5,24 @@ import Link from 'next/link'
 
 const [minWidth, maxWidth, defaultWidth] = [300, 900, 350];
 
-export default function Menu({ children }) {
+export default function Menu({ children, buttonSetAbove }) {
+    const [button, setButton] = useState({
+        search: 1,
+        type: 1,
+        data: 1
+    });
+
+    const handleClick = (toggle) => {
+        setButton(prev => ({
+            ...prev,
+            [toggle]: prev[toggle] === 1 ? 0 : 1
+        }));
+        if (buttonSetAbove) { 
+            buttonHole(button); 
+        }
+
+    };
+
     const [filters, setFilters] = useState({
         specific: false,
         area: false,
@@ -131,9 +148,9 @@ export default function Menu({ children }) {
         gap-x-4 gap-y-2
         p-1
         text-s">
-                <FilterButton text="ข้อมูลเฉพาะ" active={filters.specific} onClick={() => setFilter('specific')} />
-                <FilterButton text="พื้นที่" active={filters.area} onClick={() => setFilter('area')} />
-                <FilterButton text="ประเภทธุรกิจ" active={filters.type} onClick={() => setFilter('type')} />
+                    <FilterButton text="ข้อมูลเฉพาะ" active={filters.specific} onClick={() => setFilter('specific')} />
+                    <FilterButton text="พื้นที่" active={filters.area} onClick={() => setFilter('area')} />
+                    <FilterButton text="ประเภทธุรกิจ" active={filters.type} onClick={() => setFilter('type')} />
                 </div>
 
             </div>

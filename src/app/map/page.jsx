@@ -11,13 +11,19 @@ const MapComponent = dynamic(() => import('../components/MapComponent.jsx'), {
 });
 
 export default function MapPage() {
+  const [button, setButton] = useState({
+        search: 1,
+        type: 1,
+        data: 1
+  });
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [lst, setLst] = useState([]);
   const [coor, setCoor] = useState(null);
   const [markers, setMarkers] = useState(null);
     const fetchCoor = async () => {
       if (lst && lst.length > 0) {
-        const url = `${backend_url}/coor?code=\"${lst.join(',')}\"`;
+        const codes = lst.map(obj => obj.code);
+        const url = `${backend_url}/coor?code=\"${codes.join(',')}\"`;
         console.log("Fetching:", url);
 
         try {
@@ -37,7 +43,8 @@ export default function MapPage() {
 
 const fetchMarker = async () => {
   if (lst && lst.length > 0) {
-        const url = `${backend_url}/factory?code=\"${lst.join(',')}\"`;
+        const codes = lst.map(obj => obj.code);
+        const url = `${backend_url}/factory?code=\"${codes.join(',')}\"`;
         console.log("Fetching:", url);
 
     try {
@@ -64,7 +71,7 @@ const fetchMarker = async () => {
   }, [lst, backend_url]);
 
   return (<div className='w-[100vw] h-[100vh] flex'>
-    <Menu children={[<ProvinceSearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />,]}/>
+    <Menu children={[<ProvinceSearchBox lst={lst} setLst={setLst} baseUrl={backend_url} />]}/>
      <MapComponent geoJsonString={coor} markers={markers}/>
      </div>)
 }
