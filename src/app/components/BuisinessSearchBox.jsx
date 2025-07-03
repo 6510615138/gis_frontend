@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 
-const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) => {
+const BuisinessSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl, show}) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchType, setSearchType] = useState('province');//['province','district','subdistrict']
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const [results, setResults] = useState([]);//fetch data result 
     const [selected, setSelected] = useState(null);//user select province
     const [loading, setLoading] = useState(false);
 
@@ -13,28 +14,55 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
         return () => clearTimeout(handler);
     }, [searchTerm]);
 
-    const handleAddItem = (code) => {
-        if (lst && !lst.includes(code)) {
-            setLst([...lst, code]);
+    // Fetch search results
+    useEffect(() => {
+        setSelected(null);
+        if (!debouncedSearchTerm) {
+            setResults([]);
+            return;
         }
+
+        const url = `${baseUrl}/factory_type?type=${debouncedSearchTerm}`;
+        setLoading(true);
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                setResults(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error('Error fetching:', err);
+                setResults([]);
+                setLoading(false);
+            });
+    }, [debouncedSearchTerm]);
+
+    const lstAddItem = (object) => {
+        if (lst && !lst.includes(object)) {
+            setLst([...lst, object]);
+        }
+        };
+    const lstRemoveItem = (codeToRemove) => {
+        const updatedList = lst.filter(item => item.code !== codeToRemove);
+        setLst(updatedList);
     };
-
-    const isAlreadyAdded = selected && lst?.includes(selected.code);
-
+    const isAlreadyAdded = selected && lst?.includes(selected);
+    if(!show){
+        return <></>
+    }
     return (
         <div className=" max-w-[425px]">
-            <div className="mb-2 text-sm text-gray-800">
-                Selected: {lst?.join(', ') || 'None'}
-            </div>
+ 
 
             <h2 className="text-lg font-semibold mb-2">Search Buisiness</h2>
+
 
             {/* Search Input */}
             <div className="relative w-full mb-2">
                 <input
                     type="text"
-                    placeholder={`Search for a ${searchType}...`}
-                    value={selected ? selected.name : searchTerm}
+                    placeholder={`Search for a type...`}
+                    value={selected ? selected.type : searchTerm}
                     onChange={(e) => {
                         setSearchTerm(e.target.value);
                         if (selected) setSelected(null);
@@ -54,7 +82,7 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
 
             {/* Search Results */}
             {loading && <p className="text-sm text-gray-500">Searching...</p>}
-            {debouncedSearchTerm &&results.length===0 && <p className="text-sm text-red-500">No results found.</p>}
+            {!loading &&debouncedSearchTerm &&results.length===0 && <p className="text-sm text-red-500">No results found.</p>}
             {!loading && results.length > 0 && !selected && (
                 <ul
                     className="max-h-[250px] mt-1 overflow-y-auto rounded-2xl bg-white border border-gray-300 transition-all"
@@ -66,7 +94,7 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
                             onClick={() => setSelected(item)}
                             className="flex justify-between items-center px-5 py-2 cursor-pointer hover:bg-blue-tcct hover:text-white text-black border-b border-gray-100"
                         >
-                            <span>{item.name}</span>
+                            <span>{item.type}</span>
                         </li>
                     ))}
                 </ul>
@@ -76,8 +104,37 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
             {selected && (
                 <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
                     <div className="flex justify-between items-center">
-                        <p className="font-medium">{selected.name} (Code: {selected.code})</p>
+                        <p className="font-medium">{selected.type}</p>
+                        
                         <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-black text-xl">
+                            ✕
+                        </button>
+                        
+                    </div>
+                    <p>รหัสประเภทโรงงาน: {selected.code}</p>
+                    <div className="flex gap-3">
+                        {/* Locate (placeholder only) */}
+
+                        {/* Add */}
+                        <div
+                            onClick={() => !isAlreadyAdded && lstAddItem(selected)}
+                            className={`flex items-center gap-1 text-xs px-2 py-1 rounded-2xl ${isAlreadyAdded ? 'bg-green-300 cursor-not-allowed' : 'text-black hover:bg-blue-tcct hover:text-white cursor-pointer border'}`}
+                        >
+                            <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+                            </svg>
+                            <span>{isAlreadyAdded ? 'Added' : 'Add'}</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {lst && 
+            (<div className="mb-2 text-sm text-gray-800">
+                {lst?.map((item, index) => (
+                    <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                        <p className="font-medium">{item.type} (Code: {item.code})</p>
+                        <button onClick={()=>lstRemoveItem(item.code)} className="text-gray-400 hover:text-black text-xl">
                             ✕
                         </button>
                     </div>
@@ -90,19 +147,13 @@ const BuisinessSearchBox = ({ lst, setLst, baseUrl = 'http://localhost:8000' }) 
                             <span>Locate</span>
                         </div>
 
-                        {/* Add */}
-                        <div
-                            onClick={() => !isAlreadyAdded && handleAddItem(selected.code)}
-                            className={`flex items-center gap-1 text-xs px-2 py-1 rounded-2xl ${isAlreadyAdded ? 'bg-green-300 cursor-not-allowed' : 'text-black hover:bg-blue-tcct hover:text-white cursor-pointer border'}`}
-                        >
-                            <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-                            </svg>
-                            <span>{isAlreadyAdded ? 'Added' : 'Add'}</span>
-                        </div>
                     </div>
                 </div>
-            )}
+                ))}
+            </div>
+            )
+            }
+
         </div>
     );
 };

@@ -1,32 +1,29 @@
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import SearchBox from "./ProvinceSearchbox";
 import Link from 'next/link'
 
 const [minWidth, maxWidth, defaultWidth] = [300, 900, 350];
 
 export default function Menu({ children, buttonSetAbove }) {
-    const [button, setButton] = useState({
-        search: 1,
-        type: 1,
-        data: 1
-    });
+
+
 
     const handleClick = (toggle) => {
         setButton(prev => ({
             ...prev,
             [toggle]: prev[toggle] === 1 ? 0 : 1
         }));
-        if (buttonSetAbove) { 
-            buttonHole(button); 
+        if (buttonSetAbove) {
+            buttonHole(button);
         }
 
     };
 
     const [filters, setFilters] = useState({
-        specific: false,
-        area: false,
-        type: false,
+        data: false,
+        area: true,
+        type: true,
     });
     const setFilter = (name) => {
         setFilters(prev => ({
@@ -34,6 +31,12 @@ export default function Menu({ children, buttonSetAbove }) {
             [name]: !prev[name],
         }));
     };
+    useEffect(() => {
+        if (buttonSetAbove) {
+            buttonSetAbove(filters);
+        }
+    }, [filters]);
+
 
     const [isMinimized, setMinimized] = useState(false) // this state is for toggle minimized menu 
     const handleMinimized = () => {//state toggle function
@@ -43,6 +46,8 @@ export default function Menu({ children, buttonSetAbove }) {
 
     const [width, setWidth] = useState(defaultWidth); //dynamic width alllows resizing. used in line 63 [1]
     const isResizing = useRef(false);
+
+
 
     useEffect(() => {
         window.addEventListener("mousemove", (e) => {
