@@ -113,18 +113,6 @@ const BuisinessSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl, show})
                     </div>
                     <p>รหัสประเภทโรงงาน: {selected.code}</p>
                     <div className="flex gap-3">
-                        {/* Locate (placeholder only) */}
-
-                        {/* Add */}
-                        <div
-                            onClick={() => !isAlreadyAdded && lstAddItem(selected)}
-                            className={`flex items-center gap-1 text-xs px-2 py-1 rounded-2xl ${isAlreadyAdded ? 'bg-green-300 cursor-not-allowed' : 'text-black hover:bg-blue-tcct hover:text-white cursor-pointer border'}`}
-                        >
-                            <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-                            </svg>
-                            <span>{isAlreadyAdded ? 'Added' : 'Add'}</span>
-                        </div>
                     </div>
                 </div>
             )}

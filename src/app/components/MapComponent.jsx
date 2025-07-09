@@ -94,6 +94,9 @@ const MyMap = ({ geoJsonObj, markers }) => {
                 if (marker.lat == "NULL" || marker.long == "NULL") {
                     return
                 };
+                if (marker.lat == null || marker.long == null) {
+                    return
+                };
                 const position = [marker.lat, marker.long];
                 return (
                     <Marker key={marker.registration_num} position={position} icon={svgIcon}>

@@ -20,7 +20,7 @@ export default function MapPage() {
         data: 1
   });
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const [type, setType] = useState([]);
+  const [factory_type, setType] = useState([]);
   const [lst, setLst] = useState([]);
   const [coor, setCoor] = useState(null);
   const [markers, setMarkers] = useState(null);
@@ -52,7 +52,7 @@ const fetchCoor = async () => {
 const fetchMarker = async () => {
   if (lst && lst.length > 0) {
         const codes = lst.map(obj => obj.code);
-        const url = `${backend_url}/factory?code=\"${codes.join(',')}\"`;
+        const url = `${backend_url}/factory?code=\"${codes.join(',')}\"&type=\"${factory_type}\"`;
         console.log("Fetching:", url);
 
     try {
