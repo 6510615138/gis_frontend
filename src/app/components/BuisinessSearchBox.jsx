@@ -1,20 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
 
-const BuisinessSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl, show}) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-    const [results, setResults] = useState([]);//fetch data result 
+const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
+    const [searchTerm, setSearchTerm] = useState('');//Store the raw user input
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');//debounced input updaye with delay to reduce resource
+    const [results, setResults] = useState([]);    //store the data result from search  
     const [selected, setSelected] = useState(null);//user select province
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); //loading state true when loading, just that.
+
+    //Control the delay of the search deboucing machanism
+    const SEARCH_DEBOUNCE_DALAY = 200 //miliseconds
+
+    // Update factory type on upper level
+    // trigger on {selected} change
+    // set_factory_type should be a state set function from the upper level
+    useEffect(() => {
+        set_factory_type(selected)
+    }, [selected]);
 
     // Debounce search input
-    useEffect(() => {
-        const handler = setTimeout(() => setDebouncedSearchTerm(searchTerm), 200);
+    // trigger when {searchTerm} update
+    // delay the input to save resource
+    useEffect(() => { 
+        const handler = setTimeout(() => setDebouncedSearchTerm(searchTerm), SEARCH_DEBOUNCE_DALAY);
         return () => clearTimeout(handler);
     }, [searchTerm]);
 
+
     // Fetch search results
+    // trigger on {debouncedSearchTerm} update which depends on {searchTerm}
     useEffect(() => {
         setSelected(null);
         if (!debouncedSearchTerm) {
@@ -37,16 +51,7 @@ const BuisinessSearchBox = ({ lst, setLst, coordinates, coorSet, baseUrl, show})
             });
     }, [debouncedSearchTerm]);
 
-    const lstAddItem = (object) => {
-        if (lst && !lst.includes(object)) {
-            setLst([...lst, object]);
-        }
-        };
-    const lstRemoveItem = (codeToRemove) => {
-        const updatedList = lst.filter(item => item.code !== codeToRemove);
-        setLst(updatedList);
-    };
-    const isAlreadyAdded = selected && lst?.includes(selected);
+
     if(!show){
         return <></>
     }
