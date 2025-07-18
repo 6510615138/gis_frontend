@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 
 import React, { useState, useEffect, use ,createContext } from 'react';
 import Menu from '../components/Menu';
-import Link from "next/link";
 
 import BuisinessSearchBox from '../components/BuisinessSearchBox';
 import ProvinceSearchBox from '../components/ProvinceSearchbox';
@@ -24,7 +23,7 @@ export default function MapPage() {
   const [lst, setLst] = useState([]);
   const [coor, setCoor] = useState(null);
   const [markers, setMarkers] = useState(null);
-
+  const [data_selected, setDataSelect] = useState(null);
 
 const fetchCoor = async () => {
   if (lst && lst.length > 0) {
@@ -46,10 +45,10 @@ const fetchCoor = async () => {
   }
 };
 
-const fetchMarker = async () => {
+const fetchFactory = async () => {
   if (lst.length > 0 && factory_type) {
         const codes = lst.map(obj => obj.code);
-        const url = `${backend_url}/factory?code=\"${codes.join(',')}\"&type=\"${factory_type.code}\"`;
+        const url = `${backend_url}/${data_selected}?code=\"${codes.join(',')}\"&type=\"${factory_type.code}\"`;
         console.log("Fetching:", url);
     try {
       const res = await fetch(url);
@@ -69,11 +68,11 @@ const fetchMarker = async () => {
 
   useEffect(() => {
     fetchCoor();
-    fetchMarker();
+    fetchFactory();
   }, [lst,factory_type]);
 
   return (<div className='w-[100vw] h-[100vh] flex'>
-    <Menu children={[<ProvinceSearchBox show={button.area} lst={lst} setLst={setLst} baseUrl={backend_url} />,<BuisinessSearchBox show={button.type}  set_factory_type={setFactoryType} baseUrl={backend_url}/>]} buttonSetAbove={setButton}/>
+    <Menu children={[<ProvinceSearchBox show={button.area} lst={lst} setLst={setLst} baseUrl={backend_url} />,<BuisinessSearchBox show={button.type}  set_factory_type={setFactoryType} baseUrl={backend_url}/>]} buttonSetAbove={setButton} dataSelectFunc={setDataSelect}/>
      <MapComponent geoJsonObj={coor} markers={markers}/>
      </div>)
 }
