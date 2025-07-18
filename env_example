@@ -1,0 +1,4 @@
+the env file name should name .env.local
+and contain the environment variable 
+example 
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
