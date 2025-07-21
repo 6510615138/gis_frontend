@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
+const BuisinessSearchBox = ({ lst, set_factory_type, baseUrl, show, buttonSetAbove }) => {
     const [searchTerm, setSearchTerm] = useState('');//Store the raw user input
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');//debounced input updaye with delay to reduce resource
     const [results, setResults] = useState([]);    //store the data result from search  
@@ -21,7 +21,7 @@ const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
     // Debounce search input
     // trigger when {searchTerm} update
     // delay the input to save resource
-    useEffect(() => { 
+    useEffect(() => {
         const handler = setTimeout(() => setDebouncedSearchTerm(searchTerm), SEARCH_DEBOUNCE_DALAY);
         return () => clearTimeout(handler);
     }, [searchTerm]);
@@ -52,12 +52,12 @@ const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
     }, [debouncedSearchTerm]);
 
 
-    if(!show){
+    if (!show) {
         return <></>
     }
+
     return (
         <div className=" max-w-[425px]">
- 
 
             <h2 className="text-lg font-semibold mb-2">Search Buisiness</h2>
 
@@ -87,7 +87,7 @@ const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
 
             {/* Search Results */}
             {loading && <p className="text-sm text-gray-500">Searching...</p>}
-            {!loading &&debouncedSearchTerm &&results.length===0 && <p className="text-sm text-red-500">No results found.</p>}
+            {!loading && debouncedSearchTerm && results.length === 0 && <p className="text-sm text-red-500">No results found.</p>}
             {!loading && results.length > 0 && !selected && (
                 <ul
                     className="max-h-[250px] mt-1 overflow-y-auto rounded-2xl bg-white border border-gray-300 transition-all"
@@ -109,42 +109,39 @@ const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
             {selected && (
                 <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
                     <div className="flex justify-between items-center">
-                        <p className="font-medium">{selected.type}</p>
-                        
+                        <p className="font-medium">{selected.type} ({selected.code})</p>
                         <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-black text-xl">
                             ✕
                         </button>
-                        
                     </div>
-                    <p>รหัสประเภทโรงงาน: {selected.code}</p>
                     <div className="flex gap-3">
                     </div>
                 </div>
             )}
-            {lst && 
-            (<div className="mb-2 text-sm text-gray-800">
-                {lst?.map((item, index) => (
-                    <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                        <p className="font-medium">{item.type} (Code: {item.code})</p>
-                        <button onClick={()=>lstRemoveItem(item.code)} className="text-gray-400 hover:text-black text-xl">
-                            ✕
-                        </button>
-                    </div>
-                    <div className="flex gap-3">
-                        {/* Locate (placeholder only) */}
-                        <div className="flex items-center gap-1 text-xs px-2 py-1 border rounded-2xl text-black hover:text-white hover:bg-blue-tcct cursor-pointer">
-                            <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path fillRule="evenodd" d="M12 3a9 9 0 0 0-9 9c0 6.27 9 13 9 13s9-6.73 9-13a9 9 0 0 0-9-9Zm0 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" clipRule="evenodd" />
-                            </svg>
-                            <span>Locate</span>
-                        </div>
+            {lst &&
+                (<div className="mb-2 text-sm text-gray-800">
+                    {lst?.map((item, index) => (
+                        <div className="mt-3 p-3 bg-white text-black rounded-2xl shadow border border-gray-300 flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <p className="font-medium">{item.type} (Code: {item.code})</p>
+                                <button onClick={() => lstRemoveItem(item.code)} className="text-gray-400 hover:text-black text-xl">
+                                    ✕
+                                </button>
+                            </div>
+                            <div className="flex gap-3">
+                                {/* Locate (placeholder only) */}
+                                <div className="flex items-center gap-1 text-xs px-2 py-1 border rounded-2xl text-black hover:text-white hover:bg-blue-tcct cursor-pointer">
+                                    <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fillRule="evenodd" d="M12 3a9 9 0 0 0-9 9c0 6.27 9 13 9 13s9-6.73 9-13a9 9 0 0 0-9-9Zm0 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" clipRule="evenodd" />
+                                    </svg>
+                                    <span>Locate</span>
+                                </div>
 
-                    </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                ))}
-            </div>
-            )
+                )
             }
 
         </div>
@@ -152,3 +149,4 @@ const BuisinessSearchBox = ({ lst,set_factory_type, baseUrl, show}) => {
 };
 
 export default BuisinessSearchBox;
+

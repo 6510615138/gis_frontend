@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 const [minWidth, maxWidth, defaultWidth] = [400, 900, 350];
 
-export default function Menu({ children, buttonSetAbove, dataSelectFunc }) {
+export default function Menu({ children, buttonSetAbove, modeSelectFunc }) {
 
     const [menu_button, setMenuButton] = useState({
         ev: false,
@@ -26,12 +26,12 @@ export default function Menu({ children, buttonSetAbove, dataSelectFunc }) {
         setMenuButton(buttons);
     };
     useEffect(() => {
-        if (dataSelectFunc) {
+        if (modeSelectFunc) {
             var keys = Object.keys(menu_button);
             var filtered = keys.filter(function (key) {
                 return menu_button[key]
             });
-            dataSelectFunc(filtered[0]);
+            modeSelectFunc(filtered[0]);
         }
     }, [menu_button]);
 
@@ -46,22 +46,7 @@ export default function Menu({ children, buttonSetAbove, dataSelectFunc }) {
 
     };
 
-    const [filters, setFilters] = useState({
-        data: false,
-        area: true,
-        type: true,
-    });
-    const setFilter = (name) => {
-        setFilters(prev => ({
-            ...prev,
-            [name]: !prev[name],
-        }));
-    };
-    useEffect(() => {
-        if (buttonSetAbove) {
-            buttonSetAbove(filters);
-        }
-    }, [filters]);
+
 
 
     const [isMinimized, setMinimized] = useState(false) // this state is for toggle minimized menu 
@@ -181,31 +166,11 @@ export default function Menu({ children, buttonSetAbove, dataSelectFunc }) {
                     <MenuCard text="สถานีชาร์จ" active={menu_button.ev} onClick={() => setMenu("ev")} type="ev" />
                     <MenuCard text="ร้านสะดวกซื้อ" active={menu_button.store} onClick={() => setMenu("store")} type="store" />
                     <MenuCard text="โรงงาน" active={menu_button.factory} onClick={() => setMenu("factory")} type="factory" />
-                    <MenuCard text="โรงงานน้ำตาล" active={menu_button.sugar} onClick={() => setMenu("sugar")} type="sugar" />
+                    {/* <MenuCard text="โรงงานน้ำตาล" active={menu_button.sugar} onClick={() => setMenu("sugar")} type="sugar" /> */}
                 </div>
 
             </div>
 
-            <div className="filter category
-        bg-white w-full h-fit
-        border-b-1 border-black/10
-        flex flex-row
-        gap-x-4 gap-y-2
-        p-1
-        text-s
-        ">
-                <p className="my-auto text-black/80 text-nowrap ml-4">ตัวกรองข้อมูล</p>
-                <div className="
-        flex flex-row flex-wrap 
-        gap-x-4 gap-y-2
-        p-1
-        text-s">
-                    <FilterButton text="ข้อมูลเฉพาะ" active={filters.specific} onClick={() => setFilter('specific')} />
-                    <FilterButton text="พื้นที่" active={filters.area} onClick={() => setFilter('area')} />
-                    <FilterButton text="ประเภทธุรกิจ" active={filters.type} onClick={() => setFilter('type')} />
-                </div>
-
-            </div>
             <div>
 
             </div>
@@ -230,24 +195,7 @@ export default function Menu({ children, buttonSetAbove, dataSelectFunc }) {
 
 
 
-const FilterButton = ({ text, onClick, active }) => {
 
-    return (
-        <div
-            onClick={onClick}
-            className={`button
-            w-fit h-fit
-            px-3
-            border-black/10 border-1
-            rounded-[5px]
-            ${active ? 'bg-blue-tcct text-white' : 'bg-white text-black border-gray-300'}
-            cursor-pointer
-            text-nowrap
-            `}>
-            <p>{text}</p>
-        </div>
-    )
-}
 
 const MenuCard = ({ text, img, onClick, active, type }) => {
 

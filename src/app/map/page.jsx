@@ -23,7 +23,7 @@ export default function MapPage() {
   const [lst, setLst] = useState([]);
   const [coor, setCoor] = useState(null);
   const [markers, setMarkers] = useState(null);
-  const [data_selected, setDataSelect] = useState(null);
+  const [mode, modeSelect] = useState(null);
 
 const fetchCoor = async () => {
   if (lst && lst.length > 0) {
@@ -32,8 +32,7 @@ const fetchCoor = async () => {
         console.log("Fetching:", url);
     try {
       const res = await fetch(url);
-      const data = await res.json(); // Assuming backend returns JSON
-      // If the response is a stringified GeoJSON, parse it again
+      const data = await res.json();
       const json = typeof data === 'string' ? JSON.parse(data) : data;
       setCoor(json);
     } catch (err) {
@@ -48,7 +47,7 @@ const fetchCoor = async () => {
 const fetchFactory = async () => {
   if (lst.length > 0 && factory_type) {
         const codes = lst.map(obj => obj.code);
-        const url = `${backend_url}/${data_selected}?code=\"${codes.join(',')}\"&type=\"${factory_type.code}\"`;
+        const url = `${backend_url}/${mode}?code=\"${codes.join(',')}\"&type=\"${factory_type.code}\"`;
         console.log("Fetching:", url);
     try {
       const res = await fetch(url);
@@ -71,8 +70,38 @@ const fetchFactory = async () => {
     fetchFactory();
   }, [lst,factory_type]);
 
-  return (<div className='w-[100vw] h-[100vh] flex'>
-    <Menu children={[<ProvinceSearchBox show={button.area} lst={lst} setLst={setLst} baseUrl={backend_url} />,<BuisinessSearchBox show={button.type}  set_factory_type={setFactoryType} baseUrl={backend_url}/>]} buttonSetAbove={setButton} dataSelectFunc={setDataSelect}/>
-     <MapComponent geoJsonObj={coor} markers={markers}/>
-     </div>)
+  return (
+  <div className='w-[100vw] h-[100vh] flex'>
+    <Menu
+      children={
+        mode === "store"
+          ? ["store menu here"]
+          : mode === "ev"
+          ? ["ev menu here"]
+          : mode === "factory"
+          ? [
+                <BuisinessSearchBox
+                key="business"
+                show={button.type}
+                set_factory_type={setFactoryType}
+                baseUrl={backend_url}
+
+              />,
+              <ProvinceSearchBox
+                key="province"
+                show={button.area}
+                lst={lst}
+                setLst={setLst}
+                baseUrl={backend_url}
+              />
+
+            ]
+          : []
+      }
+
+      modeSelectFunc={modeSelect}
+    />
+    <MapComponent geoJsonObj={coor} markers={markers} />
+  </div>
+);
 }
