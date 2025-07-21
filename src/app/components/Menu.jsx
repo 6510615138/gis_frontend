@@ -182,7 +182,6 @@ export default function Menu({ children, buttonSetAbove, dataSelectFunc }) {
                     <MenuCard text="ร้านสะดวกซื้อ" active={menu_button.store} onClick={() => setMenu("store")} type="store" />
                     <MenuCard text="โรงงาน" active={menu_button.factory} onClick={() => setMenu("factory")} type="factory" />
                     <MenuCard text="โรงงานน้ำตาล" active={menu_button.sugar} onClick={() => setMenu("sugar")} type="sugar" />
-                    <MenuCard text="โรงงานน้ำแข็ง" active={menu_button.ice} onClick={() => setMenu("ice")} type="ice" />
                 </div>
 
             </div>
