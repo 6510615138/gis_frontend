@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const ProvinceSearchBox = ({ lst, setLst, baseUrl, show }) => {
+const ProvinceSearchBox = ({ lst, setLst, baseUrl, show=true }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [searchType, setSearchType] = useState('province');//['province','district','subdistrict']

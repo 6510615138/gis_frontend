@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const BuisinessSearchBox = ({ lst, set_factory_type, baseUrl, show, buttonSetAbove }) => {
+const FactorySearchBox = ({ lst, set_factory_type, baseUrl, show=true, buttonSetAbove }) => {
     const [searchTerm, setSearchTerm] = useState('');//Store the raw user input
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');//debounced input updaye with delay to reduce resource
     const [results, setResults] = useState([]);    //store the data result from search  
@@ -59,7 +59,7 @@ const BuisinessSearchBox = ({ lst, set_factory_type, baseUrl, show, buttonSetAbo
     return (
         <div className=" max-w-[425px]">
 
-            <h2 className="text-lg font-semibold mb-2">Search Buisiness</h2>
+            <h2 className="text-lg font-semibold mb-2">Search Factory Type</h2>
 
 
             {/* Search Input */}
@@ -148,5 +148,5 @@ const BuisinessSearchBox = ({ lst, set_factory_type, baseUrl, show, buttonSetAbo
     );
 };
 
-export default BuisinessSearchBox;
+export default FactorySearchBox;
 
