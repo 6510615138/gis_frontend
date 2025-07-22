@@ -3,21 +3,16 @@ import dynamic from 'next/dynamic';
 
 import React, { useState, useEffect, use ,createContext } from 'react';
 import Menu from '../components/Menu';
-
-import BuisinessSearchBox from '../components/BuisinessSearchBox';
+import FactorySearchBox from '../components/FactorySearchBox';
 import ProvinceSearchBox from '../components/ProvinceSearchbox';
-
+import StoreFilter from '../components/StoreFilter';
 
 const MapComponent = dynamic(() => import('../components/MapComponent.jsx'), {
   ssr: false,
 });
 
 export default function MapPage() {
-  const [button, setButton] = useState({
-        area: 1,
-        type: 1,
-        data: 1
-  });
+
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [factory_type, setFactoryType] = useState([]);
   const [lst, setLst] = useState([]);
@@ -75,21 +70,21 @@ const fetchFactory = async () => {
     <Menu
       children={
         mode === "store"
-          ? ["store menu here"]
+          ? ["store menu here",
+            <StoreFilter/>
+          ]
           : mode === "ev"
           ? ["ev menu here"]
           : mode === "factory"
           ? [
-                <BuisinessSearchBox
+                <FactorySearchBox
                 key="business"
-                show={button.type}
                 set_factory_type={setFactoryType}
                 baseUrl={backend_url}
 
               />,
               <ProvinceSearchBox
                 key="province"
-                show={button.area}
                 lst={lst}
                 setLst={setLst}
                 baseUrl={backend_url}
