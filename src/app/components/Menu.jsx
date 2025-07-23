@@ -11,16 +11,12 @@ export default function Menu({ children, buttonSetAbove, modeSelectFunc }) {
         ev: false,
         store: false,
         factory: false,
-        sugar: false,
-        ice: false,
     });
     const setMenu = (name) => {
         let buttons = {
             ev: false,
             store: false,
             factory: false,
-            sugar: false,
-            ice: false,
         }
         buttons[name] = true;
         setMenuButton(buttons);
@@ -207,13 +203,13 @@ const MenuCard = ({ text, img, onClick, active, type }) => {
             max-w-[120px]
             border-black/10 border-1
             rounded-[5px]
-            ${active ? 'bg-blue-tcct text-white stroke-white' : 'bg-white text-black border-gray-300'}
+            ${active ? 'bg-blue-tcct hover:bg-blue-tcct/95 text-white stroke-white' : 'hover:bg-blue-tcct/20 bg-white text-black border-gray-300'}
             cursor-pointer
             text-nowrap
             `}>
 
             {type === "ice" ? (
-                // SVG1
+                // SVG ICE
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mx-auto my-2 ${active ? "stroke-white" : "stroke-black"} max-w-[45px]`}>
                     <path d="M12 2V18M12 22V18M12 18L15 21M12 18L9 21M15 3L12 6L9 3"  strokeLinecap="round" />
                     <path d="M3.33978 7.00042L6.80389 9.00042M6.80389 9.00042L17.1962 15.0004M6.80389 9.00042L5.70581 4.90234M6.80389 9.00042L2.70581 10.0985M17.1962 15.0004L20.6603 17.0004M17.1962 15.0004L21.2943 13.9023M17.1962 15.0004L18.2943 19.0985"  strokeLinecap="round" />
@@ -221,11 +217,11 @@ const MenuCard = ({ text, img, onClick, active, type }) => {
                 </svg>
             )
                 : type === "store" ? (
-                    // SVG2
+                    // SVG STORE
                     <svg className={`mx-auto my-2 ${active ? "stroke-white" : "stroke-black"} max-w-[45px]`} viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" strokeWidth="3"  fill="none"><path d="M52,27.18V52.76a2.92,2.92,0,0,1-3,2.84H15a2.92,2.92,0,0,1-3-2.84V27.17" /><polyline points="26.26 55.52 26.26 38.45 37.84 38.45 37.84 55.52" /><path d="M8.44,19.18s-1.1,7.76,6.45,8.94a7.17,7.17,0,0,0,6.1-2A7.43,7.43,0,0,0,32,26a7.4,7.4,0,0,0,5,2.49,11.82,11.82,0,0,0,5.9-2.15,6.66,6.66,0,0,0,4.67,2.15,8,8,0,0,0,7.93-9.3L50.78,9.05a1,1,0,0,0-.94-.65H14a1,1,0,0,0-.94.66Z" /><line x1="8.44" y1="19.18" x2="55.54" y2="19.18" /><line x1="21.04" y1="19.18" x2="21.04" y2="8.4" /><line x1="32.05" y1="19.18" x2="32.05" y2="8.4" /><line x1="43.01" y1="19.18" x2="43.01" y2="8.4" /></svg>
                 )
                     : type === "factory" ? (
-                        // SVG2
+                         // SVG FACTORY
                         <svg className={`mx-auto my-2 ${active ? "stroke-white" : "stroke-black"} max-w-[45px]`} version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 512 512" stroke="#ffffff">
                             <g>
@@ -257,7 +253,7 @@ const MenuCard = ({ text, img, onClick, active, type }) => {
 
                     )
                         : type === "sugar" ? (
-
+                            // SVG SUGAR
                             <svg className={`mx-auto my-2 ${active ? "stroke-white" : "stroke-black"} max-w-[45px]`} version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 512 512"  >
 
@@ -274,6 +270,7 @@ const MenuCard = ({ text, img, onClick, active, type }) => {
                             </svg>
                         )
                             : type === "ev" ? (
+                                 // SVG EV
                                 <svg className={`mx-auto my-2 ${active ? "stroke-white" : "stroke-black"} max-w-[45px]`} viewBox="0 0 80 80" enableBackground="new 0 0 80 80" id="Layer_1" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
                                     <g>

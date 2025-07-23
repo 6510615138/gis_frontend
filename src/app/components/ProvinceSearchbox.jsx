@@ -54,7 +54,7 @@ const ProvinceSearchBox = ({ lst, setLst, baseUrl, show=true }) => {
         <div className=" max-w-[425px]">
 
 
-            <h2 className="text-lg font-semibold mb-2">Search Location</h2>
+            <h2 className="text-lg font-semibold mb-2">ค้นหาพื้นที่</h2>
 
             {/* Search Type Dropdown */}
             <div className="mb-3">

@@ -14,35 +14,57 @@ const MapComponent = dynamic(() => import('../components/MapComponent.jsx'), {
 export default function MapPage() {
 
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const [factory_type, setFactoryType] = useState([]);
-  const [lst, setLst] = useState([]);
-  const [coor, setCoor] = useState(null);
+  const [userSelection, setUserSelection] = useState([]); //A state maintain choices of the user
+  const [selected_area_list, setAreaList] = useState([]); //A state maintain list of selected area
+  const [polygonCoordinates, setPolygonCoordinates] = useState(null); //A state maintaining coordinates of the areas polygon for display
   const [markers, setMarkers] = useState(null);
   const [mode, modeSelect] = useState(null);
 
-const fetchCoor = async () => {
-  if (lst && lst.length > 0) {
-        const codes = lst.map(obj => obj.code);
+useEffect(() => {
+  // console.log for debugging
+    console.log("mode :", mode)
+}, [mode]);
+
+const fetchCoordinates = async () => {
+  if (selected_area_list && selected_area_list.length > 0) {
+        const codes = selected_area_list.map(obj => obj.code);
         const url = `${backend_url}/coor?code=\"${codes.join(',')}\"`;
         console.log("Fetching:", url);
     try {
       const res = await fetch(url);
       const data = await res.json();
       const json = typeof data === 'string' ? JSON.parse(data) : data;
-      setCoor(json);
+      setPolygonCoordinates(json);
     } catch (err) {
       console.error('Error fetching:', err);
-      setCoor(null);
+      setPolygonCoordinates(null);
     }
   } else {
-    setCoor(null);
+    setPolygonCoordinates(null);
   }
 };
 
-const fetchFactory = async () => {
-  if (lst.length > 0 && factory_type) {
-        const codes = lst.map(obj => obj.code);
-        const url = `${backend_url}/${mode}?code=\"${codes.join(',')}\"&type=\"${factory_type.code}\"`;
+const fetchDataFromBackend = async () => {
+  if (selected_area_list.length > 0 && userSelection) {
+        const codes = selected_area_list.map(obj => obj.code);
+      let url = `${backend_url}/${mode}`;
+
+      //switching apis URL for each mode
+      switch (mode) {
+        case "factory":
+          url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${userSelection.code}`;
+          break;
+        case "store":
+          let selected_stores = Object.keys(userSelection).join(','); // map selected_stores from userSelection : { Lawson: true, TopSmall: true, TescoSmall: true } >> "Lawson,TopSmall,TescoSmall"
+          url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${selected_stores}`;
+          break;
+        case "ev":
+          url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${userSelection.code}`;
+          break;
+        default:
+          return 0; // return 0 in case mode is not selected
+      }
+
         console.log("Fetching:", url);
     try {
       const res = await fetch(url);
@@ -59,19 +81,29 @@ const fetchFactory = async () => {
   }
 };
 
-
-  useEffect(() => {
-    fetchCoor();
-    fetchFactory();
-  }, [lst,factory_type]);
+//fetch and update coordinates on userSelection or area changes
+useEffect(() => {
+  // console.log for debugging
+    console.log("userSelection", userSelection)
+    console.log("selected_area_list", selected_area_list)
+    fetchCoordinates();
+    fetchDataFromBackend();
+}, [selected_area_list,userSelection]);
 
   return (
   <div className='w-[100vw] h-[100vh] flex'>
     <Menu
       children={
         mode === "store"
-          ? ["store menu here",
-            <StoreFilter/>
+          ? [,
+            <ProvinceSearchBox
+                key="province"
+                lst={selected_area_list}
+                setLst={setAreaList}
+                baseUrl={backend_url}
+              />
+            ,
+            <StoreFilter setSelectedStoreFunction={setUserSelection}/>
           ]
           : mode === "ev"
           ? ["ev menu here"]
@@ -79,14 +111,13 @@ const fetchFactory = async () => {
           ? [
                 <FactorySearchBox
                 key="business"
-                set_factory_type={setFactoryType}
+                set_factory_type={setUserSelection}
                 baseUrl={backend_url}
-
               />,
               <ProvinceSearchBox
                 key="province"
-                lst={lst}
-                setLst={setLst}
+                lst={selected_area_list}
+                setLst={setAreaList}
                 baseUrl={backend_url}
               />
 
@@ -96,7 +127,7 @@ const fetchFactory = async () => {
 
       modeSelectFunc={modeSelect}
     />
-    <MapComponent geoJsonObj={coor} markers={markers} />
+    <MapComponent geoJsonObj={polygonCoordinates} markers={markers} />
   </div>
 );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// Define categories and their options
 const categories = [
   {
     key: 'Speciality_Store',
@@ -23,9 +22,9 @@ const categories = [
       { value: 'Lawson', label: 'Lawson 108' },
       { value: 'Jiffy', label: 'Jiffy' },
       { value: 'CJ_Express', label: 'CJ Express' },
-      { value: 'MaxValuTanjai', label: "MaxValu Tanjai" },
+      { value: 'MaxValuTanjai', label: 'MaxValu Tanjai' },
       { value: 'Freshmart', label: 'Freshmart' },
-      { value: 'TopSmall', label: "Tops Daily" },
+      { value: 'TopSmall', label: 'Tops Daily' },
       { value: 'Big_mini', label: 'mini BigC' },
       { value: 'TescoSmall', label: "Lotus's Go Fresh" },
     ],
@@ -59,16 +58,19 @@ const categories = [
   },
 ];
 
-const StoreFilter = ({ submitStore }) => {
-  // Track individual checkbox states
-  const [selected, setSelected] = useState({});
+const StoreFilter = ({ setSelectedStoreFunction}) => {
+  const [selected, setSelected] = useState({});   // selected store checkbox 
+  const [collapsed, setCollapsed] = useState({}); // store collapsed state
 
-  // Toggle a single checkbox
+  const submitStore = () => {
+    console.log("submitted", selected)
+    setSelectedStoreFunction(selected)
+  };
+
   const handleCheckboxChange = (name, checked) => {
     setSelected(prev => ({ ...prev, [name]: checked }));
   };
 
-  // Toggle a whole group
   const handleCheckboxGroup = (groupKey, checked) => {
     const group = categories.find(c => c.key === groupKey);
     if (!group) return;
@@ -79,38 +81,62 @@ const StoreFilter = ({ submitStore }) => {
     setSelected(prev => ({ ...prev, ...updates }));
   };
 
+  const toggleCollapse = (key) => {
+    setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
-    <div id="shopping" className="w-75" style={{ display: 'block' }}>
-      <form name="shopping">
-        <div className="row pb-2">
-          {categories.map(cat => {
-            // determine if all options in this category are selected
-            const allSelected = cat.options.every(opt => selected[opt.value]);
+    <div id="store" className="w-75" style={{ display: 'block' }}>
+      <h2 className="text-lg font-semibold mb-2">แสดงข้อมูลร้านค้า</h2>
+      <form name="store">
+        <div className="row pb-3">
+          {categories.map(category => {
+            const allSelected = category.options.every(opt => selected[opt.value]);
+            const isCollapsed = collapsed[category.key];
+
             return (
-              <div key={cat.key} className="col border-end mt-3">
-                <div className="text-center shop-type">{cat.label}</div>
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  id={cat.key}
-                  checked={allSelected}
-                  onChange={e => handleCheckboxGroup(cat.key, e.target.checked)}
-                />
-                <label htmlFor={cat.key}>Select all</label>
-                <br />
-                {cat.options.map(opt => (
-                  <React.Fragment key={opt.value}>
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id={opt.value}
-                      checked={!!selected[opt.value]}
-                      onChange={e => handleCheckboxChange(opt.value, e.target.checked)}
-                    />
-                    <label htmlFor={opt.value}>{opt.label}</label>
-                    <br />
-                  </React.Fragment>
-                ))}
+              <div key={category.key} className="col border-end">
+                <div className="d-flex justify-content-between ">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-secondary w-full"
+                    onClick={() => toggleCollapse(category.key)}
+                  >
+                    <div className="w-full px-4 py-1.5 rounded-xs 
+                    cursor-pointer hover:bg-blue-tcct hover:text-white 
+                    justify-items-start text-start"
+                    >{category.label} {isCollapsed ?'▴' : '▾' }</div>
+                  </button>
+
+
+                </div>
+                {isCollapsed && (
+                  <>
+                    <div className='mx-auto px-8'>
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id={category.key}
+                        checked={allSelected}
+                        onChange={e => handleCheckboxGroup(category.key, e.target.checked)}
+                      />
+                      <label htmlFor={category.key} className="ms-1">Select all</label>
+                      <br />
+                      {category.options.map(opt => (
+                        <div key={opt.value} className="ms-2">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id={opt.value}
+                            checked={!!selected[opt.value]}
+                            onChange={e => handleCheckboxChange(opt.value, e.target.checked)}
+                          />
+                          <label htmlFor={opt.value} className="ms-1">{opt.label}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             );
           })}
@@ -118,14 +144,13 @@ const StoreFilter = ({ submitStore }) => {
       </form>
       <button
         type="button"
-        className="btn btn-secondary btn-sm submitStoreBtn"
+        className="btn btn-secondary btn-sm submitStoreBtn mt-2 border-1 cursor-pointer hover:text-white hover:bg-blue-tcct px-4 py-2 rounded-full"
         onClick={submitStore}
       >
-        อัพเดทการแสดงผลร้านค้า
+        อัพเดท
       </button>
     </div>
   );
 };
 
 export default StoreFilter;
-
