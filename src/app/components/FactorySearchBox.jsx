@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const FactorySearchBox = ({ lst, set_factory_type, baseUrl, show=true, buttonSetAbove }) => {
+const FactorySearchBox = ({ lst, set_factory_type, baseUrl, show=true }) => {
     const [searchTerm, setSearchTerm] = useState('');//Store the raw user input
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');//debounced input updaye with delay to reduce resource
     const [results, setResults] = useState([]);    //store the data result from search  
