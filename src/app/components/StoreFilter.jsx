@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-const categories = [
+//
+const CATAGORIES = [
   {
     key: 'Speciality_Store',
     label: 'Speciality Store',
@@ -72,7 +73,7 @@ const StoreFilter = ({ setSelectedStoreFunction}) => {
   };
 
   const handleCheckboxGroup = (groupKey, checked) => {
-    const group = categories.find(c => c.key === groupKey);
+    const group = CATAGORIES.find(c => c.key === groupKey);
     if (!group) return;
     const updates = {};
     group.options.forEach(opt => {
@@ -90,7 +91,7 @@ const StoreFilter = ({ setSelectedStoreFunction}) => {
       <h2 className="text-lg font-semibold mb-2">แสดงข้อมูลร้านค้า</h2>
       <form name="store">
         <div className="row pb-3">
-          {categories.map(category => {
+          {CATAGORIES.map(category => {
             const allSelected = category.options.every(opt => selected[opt.value]);
             const isCollapsed = collapsed[category.key];
 
