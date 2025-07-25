@@ -4,8 +4,8 @@ import { MapContainer, TileLayer, Polygon, useMap, Marker, Popup, useMapEvents }
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
-
-// --- Parse GeoJSON ---
+import { LAZY_LOAD_THRESHOLD } from '../map/page';
+// parse geoJSON to array
 const parseGeoJsonCoordinates = (geoJsonObj) => {
     const arr = [];
 
@@ -19,7 +19,7 @@ const parseGeoJsonCoordinates = (geoJsonObj) => {
     return arr;
 };
 
-// --- Generate Random Color ---
+// Generate random color
 function getRandomColor(seed) {
     if (typeof seed !== "number") {
         seed = seed.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -42,7 +42,8 @@ function getRandomColor(seed) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-// --- Custom Hook to Track Zoom Level ---
+// hooks to watch for zoom change
+// allowing condition on zoom level
 function ZoomWatcher({ onZoomChange }) {
     useMapEvents({
         zoomend: (e) => {
@@ -52,12 +53,25 @@ function ZoomWatcher({ onZoomChange }) {
     return null;
 }
 
-const MyMap = ({ geoJsonObj, markers }) => {
-    const [polygons, setPolygons] = useState([]);
-    const [zoomLevel, setZoomLevel] = useState(6);
-    const [mapCenter, setMapCenter] = useState([13.75, 100.5]);
-    const ZOOM_THRESHOLD = 13;
 
+// jsx function displaying map
+// the map yor see on the app is from here
+// * geoJsonObj is expected to be POLYGON or MULTIPOLYGON. see more https://geojson.org/
+// * markers is the coordinates of the location show on the map
+// * mode is the flag to let the map know what type of data is in marker and how to show it.
+
+const MyMap = ({ geoJsonObj, markers ,mode, setZoom}) => {
+    const [polygons, setPolygons] = useState([]);
+    const [zoom_level, setZoomLevel] = useState(6);
+    const [mapCenter, setMapCenter] = useState([13.75, 100.5]); // Initial Thailand coordinates
+    const ZOOM_THRESHOLD = LAZY_LOAD_THRESHOLD; //get LAZY_LOAD_THRESHOLD from page.tsx
+
+    //hook for update zoom level to upper elements
+    useEffect(() => {
+        setZoom(zoom_level);
+    },[zoom_level]);
+
+    //parse geojson when geojson is updated
     useEffect(() => {
         if (geoJsonObj) {
             try {
@@ -85,7 +99,7 @@ const MyMap = ({ geoJsonObj, markers }) => {
         iconAnchor: [10, 10],
     });
 
-    // Simple dot icon for zoomed-out view
+    // display the data as a dot for zoomed-out view
 const dotIcon = new L.DivIcon({
     html: '<div style="width:4px; height:4px; background:red; border-radius:50%;"></div>',
     iconSize: [4, 4],         // match div size
@@ -118,7 +132,7 @@ const dotIcon = new L.DivIcon({
             <ZoomWatcher onZoomChange={setZoomLevel} />
 
             {/* Render polygons only if zoomed in */}
-            {zoomLevel >= ZOOM_THRESHOLD }
+            {zoom_level >= ZOOM_THRESHOLD }
             {polygons.map((obj, index) =>
                 obj.map((blob, i) => (
                     <Polygon
@@ -134,7 +148,7 @@ const dotIcon = new L.DivIcon({
                 if (!marker.lat || !marker.long || marker.lat === "NULL" || marker.long === "NULL") return null;
                 const position = [marker.lat, marker.long];
 
-                return zoomLevel >= ZOOM_THRESHOLD ? (
+                return zoom_level >= ZOOM_THRESHOLD ? (
                     <Marker key={marker.registration_num} position={position} icon={svgIcon}>
                         <Popup>
                             <strong>{marker.name}</strong><br />

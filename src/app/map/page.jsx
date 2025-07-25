@@ -7,25 +7,28 @@ import FactorySearchBox from '../components/FactorySearchBox';
 import ProvinceSearchBox from '../components/ProvinceSearchbox';
 import StoreFilter from '../components/StoreFilter';
 
+export const LAZY_LOAD_THRESHOLD = 13
+
 const MapComponent = dynamic(() => import('../components/MapComponent.jsx'), {
   ssr: false,
 });
 
 export default function MapPage() {
-
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [userSelection, setUserSelection] = useState([]); //A state maintain choices of the user
   const [selected_area_list, setAreaList] = useState([]); //A state maintain list of selected area
   const [polygonCoordinates, setPolygonCoordinates] = useState(null); //A state maintaining coordinates of the areas polygon for display
   const [markers, setMarkers] = useState(null);
   const [mode, modeSelect] = useState(null);
+  const [zoom_1l, setZoom1L] = useState(null);//zoom at the top level component, which is this page. value from MapComponent.jsx
+
 
 useEffect(() => {
   // console.log for debugging
     console.log("mode :", mode)
 }, [mode]);
 
-const fetchCoordinates = async () => {
+const fetchAreaPolygon = async () => {
   if (selected_area_list && selected_area_list.length > 0) {
         const codes = selected_area_list.map(obj => obj.code);
         const url = `${backend_url}/coor?code=\"${codes.join(',')}\"`;
@@ -56,7 +59,7 @@ const fetchDataFromBackend = async () => {
           break;
         case "store":
           let selected_stores = Object.keys(userSelection).join(','); // map selected_stores from userSelection : { Lawson: true, TopSmall: true, TescoSmall: true } >> "Lawson,TopSmall,TescoSmall"
-          url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${selected_stores}`;
+          url = `${backend_url}/${mode}?area_code=${codes.join(',')}&store=${selected_stores}&lazy=${a}&coordinates=${a}`;
           break;
         case "ev":
           url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${userSelection.code}`;
@@ -86,7 +89,7 @@ useEffect(() => {
   // console.log for debugging
     console.log("userSelection", userSelection)
     console.log("selected_area_list", selected_area_list)
-    fetchCoordinates();
+    fetchAreaPolygon();
     fetchDataFromBackend();
 }, [selected_area_list,userSelection]);
 
@@ -120,14 +123,13 @@ useEffect(() => {
                 setLst={setAreaList}
                 baseUrl={backend_url}
               />
-
             ]
           : []
       }
 
       modeSelectFunc={modeSelect}
     />
-    <MapComponent geoJsonObj={polygonCoordinates} markers={markers} />
+    <MapComponent geoJsonObj={polygonCoordinates} markers={markers} mode={mode} setZoom={setZoom1L}/>
   </div>
 );
 }
