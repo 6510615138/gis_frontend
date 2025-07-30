@@ -31,12 +31,12 @@ useEffect(() => {
 const fetchAreaPolygon = async () => {
   if (selected_area_list && selected_area_list.length > 0) {
         const codes = selected_area_list.map(obj => obj.code);
-        const url = `${backend_url}/coor?code=\"${codes.join(',')}\"`;
+        const url = `${backend_url}/coor?format=json&code=\"${codes.join(',')}\"`;
         console.log("Fetching:", url);
     try {
       const res = await fetch(url);
       const data = await res.json();
-      const json = typeof data === 'string' ? JSON.parse(data) : data;
+      const json = typeof data === 'string' ?format=json& JSON.parse(data) : data;
       setPolygonCoordinates(json);
     } catch (err) {
       console.error('Error fetching:', err);
@@ -55,14 +55,14 @@ const fetchDataFromBackend = async () => {
       //switching apis URL for each mode
       switch (mode) {
         case "factory":
-          url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${userSelection.code}`;
+          url = `${backend_url}/${mode}?format=json&area_code=${codes.join(',')}&factory_type=${userSelection.code}`;
           break;
         case "store":
           let selected_stores = Object.keys(userSelection).join(','); // map selected_stores from userSelection : { Lawson: true, TopSmall: true, TescoSmall: true } >> "Lawson,TopSmall,TescoSmall"
-          url = `${backend_url}/${mode}?area_code=${codes.join(',')}&store=${selected_stores}&lazy=${a}&coordinates=${a}`;
+          url = `${backend_url}/${mode}?format=json&area_code=${codes.join(',')}&store=${selected_stores}`;
           break;
         case "ev":
-          url = `${backend_url}/${mode}?code=${codes.join(',')}&type=${userSelection.code}`;
+          url = `${backend_url}/${mode}?format=json&area_code=${codes.join(',')}&type=${userSelection.code}`;
           break;
         default:
           return 0; // return 0 in case mode is not selected

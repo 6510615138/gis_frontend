@@ -13,7 +13,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-[100vw] h-[100vh] flex flex-col items-center justify-center bg-gray-100">
+    <div className="w-[100vw] h-[100vh] flex flex-col items-center justify-center bg-gray-100 text-blue-tcct">
       <div className="bg-white px-10 py-8 rounded-2xl shadow-lg w-full max-w-md">
         <div className="flex flex-col items-center">
           <img
