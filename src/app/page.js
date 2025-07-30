@@ -3,128 +3,105 @@ import React from "react";
 import Link from "next/link";
 
 export default function Home() {
-  return (<main className="max-w-[1600px] overflow-x-hidden">
-    <header>
-      <div className="bg-red-tcct w-full h-[12px]"></div>
-      <nav className="bg-white w-full h-[64px] flex flex-row border-b-1 border-gray-300">
-        <div className="w-[1320px] h-full flex flex-row m-auto">
-        <Image
-          src="/logo.png"
-          width={130}
-          height={70}
-          sizes="5%"
-          style={{ width: 'auto', height: '100%', padding:"1%"}}
-          alt="TCCT"/>
+  return (
+    <main className="max-w-[1600px] mx-auto overflow-x-hidden">
+      <header>
+        <div className="bg-red-tcct w-full h-[12px]" />
+        <nav className="bg-white w-full h-auto border-b border-gray-300">
+          <div className="max-w-[1320px] w-full mx-auto flex flex-col lg:flex-row items-center justify-between p-4 gap-4">
+            <div className="flex flex-row items-center gap-4">
+              <Image
+                src="/logo.png"
+                width={130}
+                height={70}
+                alt="TCCT"
+                className="h-[70px] w-auto"
+              />
+              <div className="flex flex-col text-center lg:text-left">
+                <h2 className="text-sm font-semibold">สำนักงานคณะกรรมการการแข่งขันทางการค้า</h2>
+                <h2 className="text-sm font-semibold">TRADE COMPETITION COMMISSION OF THAILAND</h2>
+              </div>
+            </div>
+            <Link href="/map">
+              <div className="bg-blue-tcct text-xs px-4 py-2 text-white rounded-lg">
+                Explore
+              </div>
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-        <a className="flex flex-col my-auto font-semibold">
-          <h2>สำนักงานคณะกรรมการการแข่งขันทางการค้า</h2>
-          <h2>TRADE COMPETITION COMMISSION OF THAILAND</h2>
-        </a>
-        </div>
-        <div className="m-auto">
+      <section className="w-full px-6 py-10 flex flex-col md:flex-row gap-8 items-center justify-center">
+        <div className="w-full md:w-1/2 flex flex-col gap-5">
+          <h1 className="text-4xl md:text-6xl font-bold">TCCT GIS</h1>
+          <p className="text-lg md:text-xl">
+            Interactive map-based platform designed for organizing and tracking location-based competitions of businesses in Thailand.
+          </p>
           <Link href="/map">
-                  <div className="bg-blue-tcct text-xs size-fit p-2.5 px-3 text-white rounded-lg">
-          Explore
+            <div className="bg-blue-tcct w-fit px-5 py-3 text-white rounded-xl">
+              Explore
+            </div>
+          </Link>
         </div>
-        </Link>
-        </div>
-      </nav>
-    </header>
-
-    <div className=" h-full min-h-[150px] p-15 m-auto">
-      <div className="w-[50%] flex flex-col gap-5">
-        <h1 className="text-6xl  font-bold">TCCT GIS</h1>
-        <p className="text-xl">Interactive map-based platform designed for organizing and tracking location-based competitions of businesses in Thailand.</p>
-                  <Link href="/map">
-        <div className="bg-blue-tcct size-fit p-3 px-5 text-white rounded-xl">
-          Explore
-        </div>
-        </Link>
-      </div>
-    </div>
-    <div>
-       <Image
-          src="/map.png"
-          width={800}
-          height={450}
-          sizes="5%"
-          style={{ width: 'auto', height: '100%', padding:"1%"}}
-          alt="TCCT"
-          className="mx-8 rounded-[50px]"
+        <div className="w-full md:w-1/2">
+          <Image
+            src="/map.png"
+            width={800}
+            height={450}
+            alt="TCCT Map"
+            className="w-full h-auto rounded-[30px]"
           />
-    </div>
-    <div className="border-black/30 border-1 m-15 h-fit rounded-xl p-5">
-      <h1 className="text-4xl m-5 font-bold">
-        Competitions
-      </h1>
-      <div className="flex flex-row gap-5 flex-wrap">
-    <CompetitionCard 
-    image="/map.png"
-    title="Title"
-    description="This is the long thingy description that no one reads. but if you red that's great!"
-    />
-        <CompetitionCard 
-    image="/map.png"
-    title="Title"
-    description="This is the long thingy description that no one reads. but if you red that's great!"
-    />
-        <CompetitionCard 
-    image="/map.png"
-    title="Title"
-    description="This is the long thingy description that no one reads. but if you red that's great!"
-    />
-            <CompetitionCard 
-    image="/map.png"
-    title="Title"
-    description="This is the long thingy description that no one reads. but if you red that's great!"
-    />
-            <CompetitionCard 
-    image="/map.png"
-    title="Title"
-    description="This is the long thingy description that no one reads. but if you red that's great!"
-    />
-            <CompetitionCard 
-    image="/map.png"
-    title="Title"
-    description="This is the long thingy description that no one reads. but if you red that's great!"
-    />
-      </div>
-    </div>
-    <div className="m-15 p-5 flex flex-row">
-      <div className="w-[600px]">
-                <h1 className="text-4xl m-5 font-bold">All factories in thailand</h1>
-      </div>
-             <Image
-          src="/map.png"
-          width={800}
-          height={450}
-          sizes="5%"
-          alt="TCCT"
-          className=" rounded-[25px] w-[500px] h-[560px] object-cover"
+        </div>
+      </section>
+
+      <section className="px-6 py-10">
+        <h1 className="text-4xl font-bold mb-5">Competitions</h1>
+        <div className="flex flex-wrap gap-6 justify-center">
+          {[...Array(6)].map((_, i) => (
+            <CompetitionCard
+              key={i}
+              image="/map.png"
+              title="Title"
+              description="This is the long thingy description that no one reads. But if you read this, that's great!"
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="px-6 py-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="w-full lg:w-1/2">
+          <h1 className="text-4xl font-bold mb-4">All factories in Thailand</h1>
+        </div>
+        <div className="w-full lg:w-1/2">
+          <Image
+            src="/map.png"
+            width={800}
+            height={450}
+            alt="TCCT"
+            className="rounded-[25px] w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover"
           />
-    </div>
+        </div>
+      </section>
 
-
-    <footer className=" bg-red-tcct  text-center">
-      Trade competiton commission of Thailand. All right reserved.
-    </footer>
-  </main>);
+      <footer className="bg-red-tcct text-center text-white py-4">
+        Trade Competition Commission of Thailand. All rights reserved.
+      </footer>
+    </main>
+  );
 }
 
-
-
-
-const CompetitionCard = ({image,title,description}) => {
-    return(  <div className="max-w-[325px] flex flex-col flex-warp hover:bg-blue-tcct p-[10px] cursor-pointer rounded-[10px]">
-       <Image
-          src={image}
-          width={400}
-          height={225}
-          sizes="5%"
-          alt="TCCT"
-          className="w-full h-[225px] rounded-[5px]"
-          />
-        <h2 className="text-xl my-3 mx-1 font-bold">{title}</h2>
-        <p className="text">{description}</p>
-    </div>)
-} 
+const CompetitionCard = ({ image, title, description }) => {
+  return (
+    <div className="w-full sm:w-[280px] max-w-[325px] flex flex-col hover:bg-blue-tcct p-4 cursor-pointer rounded-lg bg-white shadow-md">
+      <Image
+        src={image}
+        width={400}
+        height={225}
+        alt="Competition"
+        className="w-full h-[200px] object-cover rounded-md"
+      />
+      <h2 className="text-xl font-bold mt-3">{title}</h2>
+      <p className="text-sm mt-2">{description}</p>
+    </div>
+  );
+};
