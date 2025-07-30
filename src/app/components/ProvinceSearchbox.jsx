@@ -51,7 +51,7 @@ const ProvinceSearchBox = ({ lst, setLst, baseUrl, show=true }) => {
     if (!show) { return <></> }
 
     return (
-        <div className=" max-w-[425px]">
+        <div className=" max-w-[425px] text-blue-tcct">
 
 
             <h2 className="text-lg font-semibold mb-2">ค้นหาพื้นที่</h2>
@@ -81,7 +81,7 @@ const ProvinceSearchBox = ({ lst, setLst, baseUrl, show=true }) => {
                         setSearchTerm(e.target.value);
                         if (selected) setSelected(null);
                     }}
-                    className="w-full p-[10px] px-[20px] rounded-3xl bg-white border border-gray-400 text-black"
+                    className="w-full p-[10px] px-[20px] rounded-3xl bg-white border border-gray-400 text-blue-tcct"
                 />
                 {searchTerm && (
                     <button

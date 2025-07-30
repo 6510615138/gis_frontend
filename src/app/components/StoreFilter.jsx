@@ -87,7 +87,7 @@ const StoreFilter = ({ setSelectedStoreFunction}) => {
   };
 
   return (
-    <div id="store" className="w-75" style={{ display: 'block' }}>
+    <div id="store" className="w-75 display-block text-blue-tcct" >
       <h2 className="text-lg font-semibold mb-2">แสดงข้อมูลร้านค้า</h2>
       <form name="store">
         <div className="row pb-3">

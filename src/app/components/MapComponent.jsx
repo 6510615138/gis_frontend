@@ -60,7 +60,7 @@ function ZoomWatcher({ onZoomChange }) {
 // * markers is the coordinates of the location show on the map
 // * mode is the flag to let the map know what type of data is in marker and how to show it.
 
-const MyMap = ({ geoJsonObj, markers ,mode, setZoom}) => {
+const MyMap = ({ geoJsonObj, markers, mode, setZoom }) => {
     const [polygons, setPolygons] = useState([]);
     const [zoom_level, setZoomLevel] = useState(6);
     const [mapCenter, setMapCenter] = useState([13.75, 100.5]); // Initial Thailand coordinates
@@ -69,7 +69,7 @@ const MyMap = ({ geoJsonObj, markers ,mode, setZoom}) => {
     //hook for update zoom level to upper elements
     useEffect(() => {
         setZoom(zoom_level);
-    },[zoom_level]);
+    }, [zoom_level]);
 
     //parse geojson when geojson is updated
     useEffect(() => {
@@ -100,12 +100,12 @@ const MyMap = ({ geoJsonObj, markers ,mode, setZoom}) => {
     });
 
     // display the data as a dot for zoomed-out view
-const dotIcon = new L.DivIcon({
-    html: '<div style="width:4px; height:4px; background:red; border-radius:50%;"></div>',
-    iconSize: [4, 4],         // match div size
-    iconAnchor: [2, 2],       // center the icon (half width, half height)
-    className: ''             
-});
+    const dotIcon = new L.DivIcon({
+        html: '<div style="width:4px; height:4px; background:red; border-radius:50%;"></div>',
+        iconSize: [4, 4],         // match div size
+        iconAnchor: [2, 2],       // center the icon (half width, half height)
+        className: ''
+    });
     function MapStateTracker({ onZoomChange, onCenterChange }) {
         useMapEvents({
             zoomend(e) {
@@ -132,7 +132,7 @@ const dotIcon = new L.DivIcon({
             <ZoomWatcher onZoomChange={setZoomLevel} />
 
             {/* Render polygons only if zoomed in */}
-            {zoom_level >= ZOOM_THRESHOLD }
+            {zoom_level >= ZOOM_THRESHOLD}
             {polygons.map((obj, index) =>
                 obj.map((blob, i) => (
                     <Polygon
@@ -144,8 +144,9 @@ const dotIcon = new L.DivIcon({
             )}
 
             {/* Render markers based on zoom level */}
-            {markers && markers.map((marker) => {
+            {Array.isArray(markers) && markers.map((marker) => {
                 if (!marker.lat || !marker.long || marker.lat === "NULL" || marker.long === "NULL") return null;
+
                 const position = [marker.lat, marker.long];
 
                 return zoom_level >= ZOOM_THRESHOLD ? (

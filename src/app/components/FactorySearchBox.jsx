@@ -36,7 +36,7 @@ const FactorySearchBox = ({ lst, set_factory_type, baseUrl, show=true }) => {
             return;
         }
 
-        const url = `${baseUrl}/factory_type?type=${debouncedSearchTerm}`;
+        const url = `${baseUrl}/factory-types?format=json&factory_type=${debouncedSearchTerm}`;
         setLoading(true);
         fetch(url)
             .then(res => res.json())
@@ -59,11 +59,11 @@ const FactorySearchBox = ({ lst, set_factory_type, baseUrl, show=true }) => {
     return (
         <div className=" max-w-[425px]">
 
-            <h2 className="text-lg font-semibold mb-2">Search Factory Type</h2>
+            <h2 className="text-lg font-semibold mb-2 text-blue-tcct">เลือกประเภทโรงงาน</h2>
 
 
             {/* Search Input */}
-            <div className="relative w-full mb-2">
+            <div className="relative w-full mb-2 text-blue-tcct">
                 <input
                     type="text"
                     placeholder={`Search for a type...`}
@@ -72,7 +72,7 @@ const FactorySearchBox = ({ lst, set_factory_type, baseUrl, show=true }) => {
                         setSearchTerm(e.target.value);
                         if (selected) setSelected(null);
                     }}
-                    className="w-full p-[10px] px-[20px] rounded-3xl bg-white border border-gray-400 text-black"
+                    className="w-full p-[10px] px-[20px] rounded-3xl bg-white border border-gray-400 "
                 />
                 {searchTerm && (
                     <button
